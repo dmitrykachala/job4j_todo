@@ -10,9 +10,19 @@
     <servlet-class>ru.job4j.todo.servlet.TaskServlet</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>ChangeStatusServlet</servlet-name>
+    <servlet-class>ru.job4j.todo.servlet.ChangeStatusServlet</servlet-class>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>TaskServlet</servlet-name>
     <url-pattern>/task</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>ChangeStatusServlet</servlet-name>
+    <url-pattern>/change</url-pattern>
   </servlet-mapping>
 
 </web-app>

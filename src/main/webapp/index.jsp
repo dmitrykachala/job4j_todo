@@ -46,18 +46,20 @@
                     Скрыть выполненные
                 </label>
             </div>
-        <table class="table table-bordered" id="table">
-            <thead>
-                <tr class="active">
-                    <th>Описание</th>
-                    <th>Дата создания</th>
-                    <th>Статус выполнения</th>
-                </tr>
-            </thead>
-            <tbody>
 
-            </tbody>
-        </table>
+            <table class="table table-bordered" id="table">
+                <thead>
+                    <tr class="active">
+                        <th>Описание</th>
+                        <th>Дата создания</th>
+                        <th>Статус выполнения</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
     </div>
 
 </body>

@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.store.TaskStore;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +22,7 @@ public class TaskServlet extends HttpServlet {
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setContentType("application/json; charset=utf-8");
         OutputStream output = resp.getOutputStream();
-        TaskStore store = new TaskStore();
+        TaskStore store = TaskStore.getInstance();
         String json = GSON.toJson(store.findAll());
         output.write(json.getBytes(StandardCharsets.UTF_8));
         output.flush();
@@ -35,12 +34,15 @@ public class TaskServlet extends HttpServlet {
             throws IOException {
         req.setCharacterEncoding("UTF-8");
 
-        TaskStore store = new TaskStore();
+        TaskStore store = TaskStore.getInstance();
 
-        store.add(new Task()
-                .setDescription(req.getParameter("description"))
-                .setCreated(new Timestamp(System.currentTimeMillis()))
-                .setDone(false));
+        Task task = new Task();
+
+        task.setDescription(req.getParameter("description"));
+        task.setCreated(new Timestamp(System.currentTimeMillis()));
+        task.setDone(false);
+
+        store.add(task);
 
         resp.sendRedirect(req.getContextPath());
 

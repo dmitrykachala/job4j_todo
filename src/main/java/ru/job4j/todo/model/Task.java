@@ -19,36 +19,32 @@ public class Task {
         return id;
     }
 
-    public Task setId(int id) {
+    public void setId(int id) {
         this.id = id;
-        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public Task setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
-        return this;
     }
 
     public Timestamp getCreated() {
         return created;
     }
 
-    public Task setCreated(Timestamp created) {
+    public void setCreated(Timestamp created) {
         this.created = created;
-        return this;
     }
 
     public boolean isDone() {
         return done;
     }
 
-    public Task setDone(boolean done) {
+    public void setDone(boolean done) {
         this.done = done;
-        return this;
     }
 
     @Override

@@ -1,24 +1,13 @@
 package ru.job4j.todo.store;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todo.model.Task;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TaskStore implements AutoCloseable {
@@ -29,6 +18,18 @@ public class TaskStore implements AutoCloseable {
             .configure().build();
     private final SessionFactory sf = new MetadataSources(registry)
             .buildMetadata().buildSessionFactory();
+
+    private TaskStore() {
+
+    }
+
+    private static class Holder {
+        private static final TaskStore INST = new TaskStore();
+    }
+
+    public static TaskStore getInstance() {
+        return Holder.INST;
+    }
 
     public Task add(Task task) {
         try {
@@ -112,13 +113,4 @@ public class TaskStore implements AutoCloseable {
         StandardServiceRegistryBuilder.destroy(registry);
     }
 
-    public static void main(String[] args) {
-        TaskStore store = new TaskStore();
-        store.add(new Task()
-                .setDescription("s")
-                .setCreated(new Timestamp(System.currentTimeMillis()))
-                .setDone(false));
-
-        System.out.println(store.findAll());
-    }
 }
