@@ -2,6 +2,7 @@ package ru.job4j.todo.store;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -10,6 +11,7 @@ import ru.job4j.todo.model.Task;
 import javax.persistence.Query;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 import java.util.logging.Logger;
 
 public class TaskStore implements AutoCloseable {
@@ -94,15 +96,11 @@ public class TaskStore implements AutoCloseable {
     }
 
     public List<Task> findAll() {
-        try {
-            Session session = sf.openSession();
-            List result = session.createQuery("from ru.job4j.todo.model.Task").list();
-            session.close();
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+
+        return this.tx(
+                session -> session.createQuery("from ru.job4j.todo.model.Task").list()
+        );
+
     }
 
     public Task findById(int id) {
@@ -118,16 +116,12 @@ public class TaskStore implements AutoCloseable {
     }
 
     public Collection<Task> findActiveTask() {
-        try {
-            Session session = sf.openSession();
-            List result = session
-                    .createQuery("from ru.job4j.todo.model.Task where done = false").list();
-            session.close();
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+
+        return this.tx(
+                session -> session
+                        .createQuery("from ru.job4j.todo.model.Task where done = false").list()
+        );
+
     }
 
     @Override
@@ -135,13 +129,19 @@ public class TaskStore implements AutoCloseable {
         StandardServiceRegistryBuilder.destroy(registry);
     }
 
-    public static void main(String[] args) {
-        TaskStore store = TaskStore.getInstance();
-        store.update(store.findById(1));
-        for (Task task : store.findAll()) {
-            System.out.println(task);
+    private <T> T tx(final Function<Session, T> command) {
+        final Session session = sf.openSession();
+        final Transaction tx = session.beginTransaction();
+        try {
+            T rsl = command.apply(session);
+            tx.commit();
+            return rsl;
+        } catch (final Exception e) {
+            session.getTransaction().rollback();
+            throw e;
+        } finally {
+            session.close();
         }
-
     }
 
 }
