@@ -1,8 +1,6 @@
 package ru.job4j.todo.servlet;
 
-import ru.job4j.todo.model.Task;
 import ru.job4j.todo.store.TaskStore;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,12 +15,7 @@ public class ChangeStatusServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         TaskStore store = TaskStore.getInstance();
-        int id = Integer.valueOf(req.getParameter("task"));
-        Task task = store.findById(id);
 
-        task.setDone(!task.isDone());
-
-        store.replace(id, task);
-
+        store.update(store.findById(Integer.valueOf(req.getParameter("task"))));
     }
 }

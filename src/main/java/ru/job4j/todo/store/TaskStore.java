@@ -6,6 +6,8 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todo.model.Task;
+
+import javax.persistence.Query;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
@@ -56,6 +58,26 @@ public class TaskStore implements AutoCloseable {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void update(Task task) {
+        try {
+            Session session = sf.openSession();
+            session.beginTransaction();
+
+            String hql = "update ru.job4j.todo.model.Task SET done = :done where id = :id";
+            Query query = session.createQuery(hql);
+
+            query.setParameter("done", !task.isDone());
+            query.setParameter("id", task.getId());
+            query.executeUpdate();
+
+            session.getTransaction().commit();
+            session.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean delete(int id) {
@@ -111,6 +133,15 @@ public class TaskStore implements AutoCloseable {
     @Override
     public void close() throws Exception {
         StandardServiceRegistryBuilder.destroy(registry);
+    }
+
+    public static void main(String[] args) {
+        TaskStore store = TaskStore.getInstance();
+        store.update(store.findById(1));
+        for (Task task : store.findAll()) {
+            System.out.println(task);
+        }
+
     }
 
 }
