@@ -16,6 +16,6 @@ public class ChangeStatusServlet extends HttpServlet {
 
         TaskStore store = TaskStore.getInstance();
 
-        store.update(store.findById(Integer.valueOf(req.getParameter("task"))));
+        store.update(Integer.valueOf(req.getParameter("task")));
     }
 }

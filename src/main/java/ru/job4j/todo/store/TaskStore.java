@@ -62,7 +62,8 @@ public class TaskStore implements AutoCloseable {
         return false;
     }
 
-    public void update(Task task) {
+    public void update(int id) {
+        Task task = findById(id);
         try {
             Session session = sf.openSession();
             session.beginTransaction();
@@ -71,7 +72,7 @@ public class TaskStore implements AutoCloseable {
             Query query = session.createQuery(hql);
 
             query.setParameter("done", !task.isDone());
-            query.setParameter("id", task.getId());
+            query.setParameter("id", id);
             query.executeUpdate();
 
             session.getTransaction().commit();
