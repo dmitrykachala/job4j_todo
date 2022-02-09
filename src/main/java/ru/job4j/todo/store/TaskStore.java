@@ -7,8 +7,6 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todo.model.Task;
-import ru.job4j.todo.model.User;
-
 import javax.persistence.Query;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
