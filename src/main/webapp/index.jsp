@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 
 <html>
@@ -31,6 +31,8 @@
 </head>
 <body>
     <div class="container-fluid">
+        <%@include file="header.jsp" %>
+        <c:if test="${user != null}">
         <form class="formForSend" role="form" action="<%=request.getContextPath()%>/task" method="post">
             <div class="form-group">
                 <label for="description">Добавить задание</label>
@@ -52,6 +54,7 @@
                     <tr class="active">
                         <th>Описание</th>
                         <th>Дата создания</th>
+                        <th>Автор задания</th>
                         <th>Статус выполнения</th>
                     </tr>
                 </thead>
@@ -59,7 +62,7 @@
 
                 </tbody>
             </table>
-
+        </c:if>
     </div>
 
 </body>

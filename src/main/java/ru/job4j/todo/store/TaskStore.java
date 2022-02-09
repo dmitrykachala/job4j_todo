@@ -7,6 +7,8 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
+
 import javax.persistence.Query;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -129,6 +131,38 @@ public class TaskStore implements AutoCloseable {
 
     }
 
+    public User add(User user) {
+        try {
+            Session session = sf.openSession();
+            session.beginTransaction();
+            session.save(user);
+            session.getTransaction().commit();
+            session.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    public User findUserByEmail(String email) {
+
+        try {
+            Session session = sf.openSession();
+            session.beginTransaction();
+            Query query = session
+                    .createQuery("from ru.job4j.todo.model.User where email = :email");
+            query.setParameter("email", email);
+            Optional res = query.getResultList().stream().findFirst();
+            User result = res.isPresent() ? (User) res.get() : null;
+            session.getTransaction().commit();
+            session.close();
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
     public void close() throws Exception {
         StandardServiceRegistryBuilder.destroy(registry);
@@ -147,6 +181,12 @@ public class TaskStore implements AutoCloseable {
         } finally {
             session.close();
         }
+    }
+
+    public static void main(String[] args) {
+        TaskStore store = TaskStore.getInstance();
+        System.out.println(store.findUserByEmail("11"));
+        System.out.println(store.findAll());
     }
 
 }

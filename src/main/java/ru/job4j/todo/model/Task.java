@@ -15,6 +15,10 @@ public class Task {
     private Timestamp created;
     private boolean done;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public int getId() {
         return id;
     }
@@ -47,6 +51,14 @@ public class Task {
         this.done = done;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -56,8 +68,8 @@ public class Task {
             return false;
         }
         Task task = (Task) o;
-        return id == task.id && done == task.done && Objects.equals(description, task.description)
-                && Objects.equals(created, task.created);
+        return id == task.id && done == task.done && Objects
+                .equals(description, task.description) && Objects.equals(created, task.created);
     }
 
     @Override
@@ -68,6 +80,6 @@ public class Task {
     @Override
     public String toString() {
         return "Task{" + "id=" + id + ", description='" + description + '\''
-                + ", created=" + created + ", done=" + done + '}';
+                + ", created=" + created + ", done=" + done + ", user=" + user + '}';
     }
 }

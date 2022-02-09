@@ -3,6 +3,7 @@ package ru.job4j.todo.servlet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.store.TaskStore;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -39,6 +40,7 @@ public class TaskServlet extends HttpServlet {
         Task task = new Task();
 
         task.setDescription(req.getParameter("description"));
+        task.setUser((User) req.getSession().getAttribute("user"));
         task.setCreated(new Timestamp(System.currentTimeMillis()));
         task.setDone(false);
 

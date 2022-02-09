@@ -46,6 +46,7 @@ function change(id) {
 }
 
 function init() {
+
     let check = document.querySelector('#hideDone');
     $.ajax({
         type: 'GET',
@@ -61,6 +62,9 @@ function init() {
 
         for (var task of data) {
 
+            var name = task.user.name;
+            console.log(name);
+
             if (check.checked) {
 
                 if (task.done) {
@@ -71,6 +75,7 @@ function init() {
                                 ${task.description}
                             </td>
                             <td>${task.created}</td>
+                            <td>${name}</td>
                             <td>
                                 <input class="form-check-input done" type="checkbox" name="task" value="${task.id}" onclick="change(${task.id})" checked/>
                             </td>
@@ -83,6 +88,7 @@ function init() {
                                 ${task.description}
                             </td>
                             <td>${task.created}</td>
+                            <td>${name}</td>
                             <td><input class="form-check-input done" type="checkbox" name="task" value="${task.id}" onclick="change(${task.id})"/></td>
                         </tr>`);
                 }
@@ -96,8 +102,9 @@ function init() {
                                 ${task.description}
                             </td>
                             <td>${task.created}</td>
+                            <td>${name}</td>
                             <td>
-                                <input class="form-check-input done" type="checkbox" name="task" value="${task.id}" onclick="change(${task.id})" checked/>
+                                <input class="form-check-input done" type="checkbox" name="task" value="${task.id}" onclick="change(${task.id})" checked disabled/>
                             </td>
                         </tr>`);
                 } else {
@@ -108,6 +115,7 @@ function init() {
                                 ${task.description}
                             </td>
                             <td>${task.created}</td>
+                            <td>${name}</td>
                             <td><input class="form-check-input done" type="checkbox" name="task" value="${task.id}" onclick="change(${task.id})"/></td>
                         </tr>`);
                 }
