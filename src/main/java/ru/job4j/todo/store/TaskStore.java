@@ -7,11 +7,17 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 
 import javax.persistence.Query;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TaskStore implements AutoCloseable {
@@ -63,7 +69,7 @@ public class TaskStore implements AutoCloseable {
     }
 
     public void update(int id) {
-        Task task = findById(id);
+
         try {
             Session session = sf.openSession();
             session.beginTransaction();
@@ -71,7 +77,7 @@ public class TaskStore implements AutoCloseable {
             String hql = "update ru.job4j.todo.model.Task SET done = :done where id = :id";
             Query query = session.createQuery(hql);
 
-            query.setParameter("done", !task.isDone());
+            query.setParameter("done", true);
             query.setParameter("id", id);
             query.executeUpdate();
 
