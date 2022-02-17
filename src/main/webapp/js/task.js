@@ -55,15 +55,26 @@ function init() {
     }).done(function (data) {
 
         var table = document.getElementById("table");
+        var cIds = document.getElementById('cIds');
         var rowCount = table.rows.length;
+
+        $('#cIds option').remove();
+        for (var category of data.categories) {
+            $('#cIds').append(`<option value="${category.id}">${category.name}</option>`);
+        }
+
         for (var i=1; i < rowCount; i++) {
             table.deleteRow(1);
         }
 
-        for (var task of data) {
+        for (var task of data.tasks) {
 
             var name = task.user.name;
-            console.log(name);
+            var categories = "";
+
+            for (var category of task.categories) {
+                categories += category.name + " ";
+            }
 
             if (check.checked) {
 
@@ -74,6 +85,7 @@ function init() {
                             <td>
                                 ${task.description}
                             </td>
+                            <td>${categories}</td>
                             <td>${task.created}</td>
                             <td>${name}</td>
                             <td>
@@ -87,6 +99,7 @@ function init() {
                             <td>
                                 ${task.description}
                             </td>
+                            <td>${categories}</td>
                             <td>${task.created}</td>
                             <td>${name}</td>
                             <td><input class="form-check-input done" type="checkbox" name="task" value="${task.id}" onclick="change(${task.id})"/></td>
@@ -101,6 +114,7 @@ function init() {
                             <td>
                                 ${task.description}
                             </td>
+                            <td>${categories}</td>
                             <td>${task.created}</td>
                             <td>${name}</td>
                             <td>
@@ -114,6 +128,7 @@ function init() {
                             <td>
                                 ${task.description}
                             </td>
+                            <td>${categories}</td>
                             <td>${task.created}</td>
                             <td>${name}</td>
                             <td><input class="form-check-input done" type="checkbox" name="task" value="${task.id}" onclick="change(${task.id})"/></td>

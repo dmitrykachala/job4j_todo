@@ -1,8 +1,12 @@
 package ru.job4j.todo.model;
 
+import ru.job4j.todo.store.TaskStore;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "task")
@@ -18,6 +22,13 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<Category> categories = new HashSet<>();
+
+    public void addCategory(Category category) {
+        this.categories.add(category);
+    }
 
     public int getId() {
         return id;
@@ -59,6 +70,14 @@ public class Task {
         this.user = user;
     }
 
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -68,13 +87,14 @@ public class Task {
             return false;
         }
         Task task = (Task) o;
-        return id == task.id && done == task.done && Objects
-                .equals(description, task.description) && Objects.equals(created, task.created);
+        return id == task.id && done == task.done && Objects.equals(description, task.description)
+                && Objects.equals(created, task.created) && Objects.equals(user, task.user)
+                && Objects.equals(categories, task.categories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, created, done);
+        return Objects.hash(id, description, created, done, user/*, categories*/);
     }
 
     @Override
@@ -82,4 +102,5 @@ public class Task {
         return "Task{" + "id=" + id + ", description='" + description + '\''
                 + ", created=" + created + ", done=" + done + ", user=" + user + '}';
     }
+
 }

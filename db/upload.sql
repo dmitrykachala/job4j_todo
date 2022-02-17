@@ -11,4 +11,4 @@ CREATE TABLE IF NOT EXISTS task (
                                     created TIMESTAMP,
                                     done boolean,
                                     user_id int not null references users(id)
-    );
+);

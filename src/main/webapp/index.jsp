@@ -38,6 +38,16 @@
                 <label for="description">Добавить задание</label>
                 <input type="text" class="form-control field" id="description"  name="description" placeholder="Описание">
             </div>
+
+            <div>
+                <label class="col-form-label col-sm-3" for="cIds" style="font-weight: 900">Список категорий</label>
+                <div class="col-sm-5">
+                    <select class="form-control field" name="cIds" id="cIds" multiple>
+                        <option>тест</option>
+                    </select>
+                </div>
+            </div>
+
             <br>
             <button type="submit" class="validateBtn" id="postBtn" onclick="post()">Добавить</button>
             <br>
@@ -53,6 +63,7 @@
                 <thead>
                     <tr class="active">
                         <th>Описание</th>
+                        <th>Категория</th>
                         <th>Дата создания</th>
                         <th>Автор задания</th>
                         <th>Статус выполнения</th>

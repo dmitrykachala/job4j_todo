@@ -7,11 +7,12 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
@@ -100,7 +101,8 @@ public class TaskStore implements AutoCloseable {
     public List<Task> findAll() {
 
         return this.tx(
-                session -> session.createQuery("from ru.job4j.todo.model.Task").list()
+                session -> session
+                        .createQuery("select distinct t from Task t join fetch t.categories").list()
         );
 
     }
@@ -149,8 +151,9 @@ public class TaskStore implements AutoCloseable {
             query.setParameter("email", email);
 
             session.getTransaction().commit();
+            User rsl = (User) query.uniqueResult();
             session.close();
-            return (User) query.uniqueResult();
+            return rsl;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -175,6 +178,36 @@ public class TaskStore implements AutoCloseable {
         } finally {
             session.close();
         }
+    }
+
+    public void addNewTask(Task task, String[] ids) {
+        try (Session session = sf.openSession()) {
+            session.beginTransaction();
+
+            for (String id : ids) {
+                Category category = session.find(Category.class, Integer.parseInt(id));
+                task.addCategory(category);
+            }
+            session.save(task);
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            sf.getCurrentSession().getTransaction().rollback();
+        }
+    }
+
+    public List<Category> allCategories() {
+        List<Category> rsl = new ArrayList<>();
+        try (Session session = sf.openSession()) {
+            session.beginTransaction();
+
+            rsl = session.createQuery("select c from Category c", Category.class).list();
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            sf.getCurrentSession().getTransaction().rollback();
+        }
+        return rsl;
     }
 
 }
