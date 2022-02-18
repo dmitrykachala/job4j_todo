@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 public class TaskServlet extends HttpServlet {
@@ -50,7 +50,7 @@ public class TaskServlet extends HttpServlet {
 
         task.setDescription(req.getParameter("description"));
         task.setUser((User) req.getSession().getAttribute("user"));
-        task.setCreated(new Timestamp(System.currentTimeMillis()));
+        task.setCreated(new Date(System.currentTimeMillis()));
         task.setDone(false);
 
         store.addNewTask(task, cIds);
